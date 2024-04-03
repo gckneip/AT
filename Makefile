@@ -13,8 +13,6 @@ main.o: transicoes.o tabela.o
 transicoes.o: tabela.o
 	gcc -c src/transicoes.c
 
-
 tabela.o:
 	gcc -c src/tabela.c
-
 
