@@ -3,13 +3,14 @@
 
 struct node {
     char conteudo;
-    struct node* esquerda;
-    struct node* direita;
+    int quantosFilhos;
+    struct node **filhos;
 };
 
 typedef struct node Nodo;
 
 Nodo* criaNodo(char conteudo);
-Nodo* criaLista (void);
-Nodo* criaLista ();
+Nodo* criaArvore ();
+void adicionaFilho(Nodo *pai, Nodo *filho);
+Nodo* criaArvore(char * entrada);
 #endif
