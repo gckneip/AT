@@ -16,8 +16,9 @@ Nodo* criaNodo (char conteudo){
     fputs("Nao foi possível alocar memoria.", stderr);
     exit(EXIT_FAILURE);
   }
-  novoNodo->conteudo=conteudo;
-  novoNodo->filhos=NULL;
+  novonodo->conteudo=conteudo;
+  novonodo->filhos=NULL;
+  novoNodo->quantosFilhos=0;
   return novoNodo;
 }
 
@@ -27,7 +28,8 @@ Nodo* criaLista (){
     fputs("Nao foi possível alocar memoria.", stderr);
     exit(EXIT_FAILURE);
   }
-  novoNodo->quantosFilhos;
+  novoNodo->quantosFilhos=0;
+  novonodo->filhos=NULL;
   return novoNodo;
 }
 
