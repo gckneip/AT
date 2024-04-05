@@ -3,7 +3,7 @@
 #include <string.h>
 #include <malloc.h>
 #include "parser.h"
-#define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario
+#define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario, não quero quebrar o que ja tá bombando
 #define INI_ARESTAS 5
 
 int main(int argc, char *argv[]){
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]){
       }
     }
     putc('\n', stdout);
+    desalocaArvore(arvoreSintaxe);
   }
   else {
     puts("nao passasse nada campeao");
@@ -56,6 +57,7 @@ Nodo* criaRaiz (){
   novoNodo->conteudo='+';
   novoNodo->filhos=malloc(sizeof(* novoNodo)*INI_ARESTAS);
   novoNodo->capacidade=INI_ARESTAS;
+  novoNodo->pai=NULL;
   return novoNodo;
 }
 
@@ -98,6 +100,7 @@ void adicionaFilho(Nodo *pai, Nodo *filho){
   pai->filhos=novoPonteiro;
   pai->filhos[pai->quantosFilhos]=filho;
   pai->quantosFilhos++;
+  filho->pai=pai;
 }
 
 Nodo* criaArvore(char * entrada){
@@ -162,12 +165,24 @@ Nodo* criaArvore(char * entrada){
 
 void desalocaArvore(Nodo* raiz){
   if (raiz == NULL) return;
-  
-  if(raiz->quantosFilhos){
+  if(raiz->quantosFilhos > 0){
+    raiz->quantosFilhos-=1;
+    printf("indo para %c em -> %p\n", raiz->filhos[raiz->quantosFilhos]->conteudo, raiz->filhos[raiz->quantosFilhos]);
     desalocaArvore(raiz->filhos[raiz->quantosFilhos]);
+    printf("saindo recursivamente de %p\n",raiz);
+    if (raiz->pai == NULL) return;
   }
-
-  printf("percorrendo %c\n", raiz->conteudo);
-  free(raiz->filhos[raiz->quantosFilhos]);
-  raiz->quantosFilhos--;
+  Nodo* anterior = raiz->pai;
+  if(anterior != NULL){
+    printf("%c agora tem %d filhos\n",anterior->conteudo, anterior->quantosFilhos);
+    free(raiz->filhos);
+    free(raiz);
+    desalocaArvore(anterior);
+    printf("saindo recursivamente de %p\n",raiz);
+  }
+  else{
+    puts("cabou-se");
+    //exit(EXIT_SUCCESS);
+    return;
+  }
 }
