@@ -15,7 +15,7 @@ typedef struct nodequeue {
 Nodo* criaNodo(char conteudo);
 Nodo* criaRaiz();
 Pilha* criaPilha ();
-void pilhaAdiciona(Pilha *pilha, Nodo *nodo);
+void pilhaAdiciona(Pilha *pilha, Nodo *nodo); //eventualmente renomear para "pilhaPush"
 Nodo* pilhaPop(Pilha *pilha);
 void adicionaFilho(Nodo *pai, Nodo *filho);
 Nodo* criaArvore(char * entrada);

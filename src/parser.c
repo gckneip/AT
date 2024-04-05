@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #include "parser.h"
+#define MAX_PILHA 30 // tive que implementar um limite superior pra (nossa) pilha porque os reallocs estão quebrando completamente o stack :(
 
 int main(int argc, char *argv[]){
   if (argc>1){
     Nodo* arvoreSintaxe = criaArvore(argv[1]);
 
-    printf("Gerou uma arvere \'%c\' com %d filhos na raiz (produtos), o que ja eh um começo promissor! >)\n", arvoreSintaxe->conteudo, arvoreSintaxe->quantosFilhos);
+    printf("Gerou uma arvere \'%c\' com %d filhos na raiz (produtos)\n", arvoreSintaxe->conteudo, arvoreSintaxe->quantosFilhos);
     for(int i = 0; i < arvoreSintaxe->quantosFilhos; i++){
       printf("%c\t", arvoreSintaxe->filhos[i]->conteudo);
     }
@@ -44,36 +45,42 @@ Nodo* criaRaiz (){
 Pilha* criaPilha (){
   Pilha* novaPilha = (Pilha*) (malloc(sizeof(Pilha)));
   novaPilha->tamanho=0;
-  novaPilha->nodos=malloc(sizeof(Nodo*));
+  novaPilha->nodos=malloc(sizeof(Nodo*)*MAX_PILHA);
 
   return novaPilha;
 }
 
 void pilhaAdiciona(Pilha *pilha, Nodo *nodo){
-  puts("realloc do pilhaAdiciona");
-  if(realloc(pilha->nodos, sizeof(Nodo*)*(pilha->tamanho+ 1))){
-    pilha->nodos[pilha->tamanho]=nodo;
-    pilha->tamanho++;
+  if(pilha->tamanho >= MAX_PILHA){
+    fputs("stack overflow!", stderr);
+    exit(EXIT_FAILURE);
   }
+  pilha->nodos[pilha->tamanho]=nodo;
+  pilha->tamanho++;
 }
 
 Nodo* pilhaPop(Pilha *pilha){
-  Nodo *ultimoItem = (Nodo *) malloc(sizeof(Nodo*));
-  ultimoItem = pilha->nodos[pilha->tamanho - 1];
-  printf("ponteiro do item removido da pilha de tamanho %d eh -> %p\n",pilha->tamanho, ultimoItem);
-  puts("realloc do pilhaPop");
-  if(realloc(pilha->nodos, sizeof(Nodo*)*(pilha->tamanho))){
-    pilha->tamanho--;
-    return ultimoItem;
-  }
-  fputs("Deu ruim o pop.\n", stderr);
+  Nodo *ultimoItem = pilha->nodos[pilha->tamanho - 1];
+  if(pilha->tamanho <= 0){
+  fputs("stack underflow!\n", stderr);
   exit(EXIT_FAILURE);
+  }
+  pilha->tamanho--;
+  return ultimoItem;
 }
 
 void adicionaFilho(Nodo *pai, Nodo *filho){
+  /* 
+    *
+    * ESSA FUNÇÃO ESTÁ CORROMPENDO O STACK E VAZANDO MEMÓRIA SEGUNDO O VALGRDIND
+    * o realloc começa a despirocar depois de qualquer resize de tamanho > 4: os 
+    * ponteiros começam a desaparecer, e o programa dá segfault. 
+    *
+    * ... mas fora isso funciona perfeitamente
+    *
+    */
   if(realloc(pai->filhos, sizeof(Nodo*)*(pai->quantosFilhos + 1))){
     pai->filhos[pai->quantosFilhos]=filho;
-    //printf("foi adicionado o filho com sucesso o filho %c", pai->filhos[pai->quantosFilhos]->conteudo);
     pai->quantosFilhos++;
   }
 }
@@ -84,10 +91,9 @@ Nodo* criaArvore(char * entrada){
   char c;
   int i;
 
-
   for (i = 0; ((c = entrada[i]) != '\0'); i++){
     if (c == '!'){
-      if (operadores->tamanho > 0 && operadores->nodos[operadores->tamanho-1]->conteudo == '!'){ //trata dulpa negação pro bodinho não infartar
+      if (operadores->tamanho > 0 && operadores->nodos[operadores->tamanho-1]->conteudo == '!'){ //trata dulpa negação pro bodinho não infartar (também é uma otimização!!!)
         pilhaPop(operadores);
         continue;
       }
@@ -116,7 +122,6 @@ Nodo* criaArvore(char * entrada){
       }
       pilhaAdiciona(processados, novoNodo);
     }
-
   }
 
    novoNodo = criaNodo('*');
