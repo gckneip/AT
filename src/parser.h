@@ -3,7 +3,7 @@
 
 typedef struct node {
   char conteudo;
-  int quantosFilhos;
+  int quantosFilhos, capacidade;
   struct node **filhos;
 } Nodo;
 
@@ -19,4 +19,5 @@ void pilhaAdiciona(Pilha *pilha, Nodo *nodo); //eventualmente renomear para "pil
 Nodo* pilhaPop(Pilha *pilha);
 void adicionaFilho(Nodo *pai, Nodo *filho);
 Nodo* criaArvore(char * entrada);
+void desalocaArvore(Nodo* raiz);
 #endif

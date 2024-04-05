@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <malloc.h>
 #include "parser.h"
-#define MAX_PILHA 30 // tive que implementar um limite superior pra (nossa) pilha porque os reallocs estão quebrando completamente o stack :(
+#define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario
+#define INI_ARESTAS 5
 
 int main(int argc, char *argv[]){
   if (argc>1){
@@ -13,6 +15,19 @@ int main(int argc, char *argv[]){
       printf("%c\t", arvoreSintaxe->filhos[i]->conteudo);
     }
     putc('\n', stdout);
+
+    for(int i = 0; i < arvoreSintaxe->quantosFilhos; i++){
+      for (int j = 0; j < arvoreSintaxe->filhos[i]->quantosFilhos; j++){
+        printf(" (%c) ", arvoreSintaxe->filhos[i]->filhos[j]->conteudo);
+        for (int k = 0; k < arvoreSintaxe->filhos[i]->filhos[j]->quantosFilhos; k++){
+          arvoreSintaxe->filhos[i]->filhos[j]->quantosFilhos ? putc(arvoreSintaxe->filhos[i]->filhos[j]->filhos[k]->conteudo, stdout) : putc(' ', stdout);
+        }
+      }
+    }
+    putc('\n', stdout);
+  }
+  else {
+    puts("nao passasse nada campeao");
   }
   return EXIT_SUCCESS;
 }
@@ -25,8 +40,9 @@ Nodo* criaNodo (char conteudo){
     exit(EXIT_FAILURE);
   }
   novoNodo->conteudo=conteudo;
-  novoNodo->filhos=malloc(sizeof(Nodo*));
+  novoNodo->filhos=malloc(sizeof(* novoNodo)*INI_ARESTAS);
   novoNodo->quantosFilhos=0;
+  novoNodo->capacidade=INI_ARESTAS;
   return novoNodo;
 }
 
@@ -38,14 +54,15 @@ Nodo* criaRaiz (){
   }
   novoNodo->quantosFilhos=0;
   novoNodo->conteudo='+';
-  novoNodo->filhos=malloc(sizeof(Nodo*));
+  novoNodo->filhos=malloc(sizeof(* novoNodo)*INI_ARESTAS);
+  novoNodo->capacidade=INI_ARESTAS;
   return novoNodo;
 }
 
 Pilha* criaPilha (){
   Pilha* novaPilha = (Pilha*) (malloc(sizeof(Pilha)));
   novaPilha->tamanho=0;
-  novaPilha->nodos=malloc(sizeof(Nodo*)*MAX_PILHA);
+  novaPilha->nodos=malloc(sizeof(* novaPilha)*MAX_PILHA);
 
   return novaPilha;
 }
@@ -70,19 +87,17 @@ Nodo* pilhaPop(Pilha *pilha){
 }
 
 void adicionaFilho(Nodo *pai, Nodo *filho){
-  /* 
-    *
-    * ESSA FUNÇÃO ESTÁ CORROMPENDO O STACK E VAZANDO MEMÓRIA SEGUNDO O VALGRDIND
-    * o realloc começa a despirocar depois de qualquer resize de tamanho > 4: os 
-    * ponteiros começam a desaparecer, e o programa dá segfault. 
-    *
-    * ... mas fora isso funciona perfeitamente
-    *
-    */
-  if(realloc(pai->filhos, sizeof(Nodo*)*(pai->quantosFilhos + 1))){
-    pai->filhos[pai->quantosFilhos]=filho;
-    pai->quantosFilhos++;
+  Nodo **novoPonteiro = pai->filhos;
+  if (pai->quantosFilhos >= pai->capacidade){
+    pai->capacidade *= 2;
+    if((novoPonteiro = realloc(pai->filhos, (sizeof(Nodo *)) * (pai->capacidade))) == NULL){
+      fputs("Erro ao realocar vetor de arestas.", stderr);
+      exit(EXIT_FAILURE);
+    }
   }
+  pai->filhos=novoPonteiro;
+  pai->filhos[pai->quantosFilhos]=filho;
+  pai->quantosFilhos++;
 }
 
 Nodo* criaArvore(char * entrada){
@@ -123,16 +138,36 @@ Nodo* criaArvore(char * entrada){
       pilhaAdiciona(processados, novoNodo);
     }
   }
-
+  if (operandos->tamanho){
    novoNodo = criaNodo('*');
    while(operandos->tamanho){
     adicionaFilho(novoNodo, pilhaPop(operandos));
   }
   pilhaAdiciona(processados, novoNodo);
 
+  }
+
   while(processados->tamanho){
     adicionaFilho(arvoreSintaxe, pilhaPop(processados));
   }
 
+  free(operandos->nodos);
+  free(operadores->nodos);
+  free(processados->nodos);
+  free(operandos);
+  free(operadores);
+  free(processados);
   return arvoreSintaxe;
+}
+
+void desalocaArvore(Nodo* raiz){
+  if (raiz == NULL) return;
+  
+  if(raiz->quantosFilhos){
+    desalocaArvore(raiz->filhos[raiz->quantosFilhos]);
+  }
+
+  printf("percorrendo %c\n", raiz->conteudo);
+  free(raiz->filhos[raiz->quantosFilhos]);
+  raiz->quantosFilhos--;
 }
