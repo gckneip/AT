@@ -6,34 +6,6 @@
 #define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario, não quero quebrar o que ja tá bombando
 #define INI_ARESTAS 5
 
-int main(int argc, char *argv[]){
-  if (argc>1){
-    Nodo* arvoreSintaxe = criaArvore(argv[1]);
-
-    printf("Gerou uma arvere \'%c\' com %d filhos na raiz (produtos)\n", arvoreSintaxe->conteudo, arvoreSintaxe->quantosFilhos);
-    for(int i = 0; i < arvoreSintaxe->quantosFilhos; i++){
-      printf("%c\t", arvoreSintaxe->filhos[i]->conteudo);
-    }
-    putc('\n', stdout);
-
-    for(int i = 0; i < arvoreSintaxe->quantosFilhos; i++){
-      for (int j = 0; j < arvoreSintaxe->filhos[i]->quantosFilhos; j++){
-        printf(" (%c) ", arvoreSintaxe->filhos[i]->filhos[j]->conteudo);
-        for (int k = 0; k < arvoreSintaxe->filhos[i]->filhos[j]->quantosFilhos; k++){
-          arvoreSintaxe->filhos[i]->filhos[j]->quantosFilhos ? putc(arvoreSintaxe->filhos[i]->filhos[j]->filhos[k]->conteudo, stdout) : putc(' ', stdout);
-        }
-      }
-    }
-    putc('\n', stdout);
-    desalocaArvore(arvoreSintaxe);
-  }
-  else {
-    puts("nao passasse nada campeao");
-  }
-  return EXIT_SUCCESS;
-}
-
-
 Nodo* criaNodo (char conteudo){
   Nodo *novoNodo = (Nodo*) (malloc(sizeof(Nodo)));
   if (novoNodo == NULL){
