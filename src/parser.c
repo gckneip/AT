@@ -167,28 +167,22 @@ void desalocaArvore(Nodo* raiz){
     for(p = raiz->quantosFilhos; p > 0; p--){
       for(vn = raiz->filhos[p-1]->quantosFilhos; vn > 0; vn--){
         for(v = raiz->filhos[p-1]->filhos[vn-1]->quantosFilhos; v > 0; v--){
-          printf("limpando filhos da variavel negada limpando var negada %d, -> %c\n", v, raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->conteudo);
           if(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->filhos != NULL){
             free(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->filhos);
           }
           free(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]);
         }
         if(raiz->filhos[p-1]->filhos[vn-1]->filhos != NULL){
-          printf("limpando vetor de filhos VN e ");
           free(raiz->filhos[p-1]->filhos[vn-1]->filhos);
         }
-        printf("limpando var ou negacao %d, -> %c\n", vn, raiz->filhos[p-1]->filhos[vn-1]->conteudo);
         free(raiz->filhos[p-1]->filhos[vn-1]);
       }
     if(raiz->filhos[p-1]->filhos != NULL){
-      printf("limpando vetor de filhos VN e ");
       free(raiz->filhos[p-1]->filhos);
     }
-    printf("limpando murtiplicassao %d, -> %c\n", p, raiz->filhos[p-1]->conteudo);
     free(raiz->filhos[p-1]);
     }
   }
   free(raiz->filhos);
-  printf("limpando raiz %d, -> %c\n", p, raiz->conteudo);
   free(raiz);
 }
