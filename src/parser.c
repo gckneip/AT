@@ -57,7 +57,6 @@ Nodo* criaRaiz (){
   novoNodo->conteudo='+';
   novoNodo->filhos=malloc(sizeof(* novoNodo)*INI_ARESTAS);
   novoNodo->capacidade=INI_ARESTAS;
-  novoNodo->pai=NULL;
   return novoNodo;
 }
 
@@ -100,7 +99,6 @@ void adicionaFilho(Nodo *pai, Nodo *filho){
   pai->filhos=novoPonteiro;
   pai->filhos[pai->quantosFilhos]=filho;
   pai->quantosFilhos++;
-  filho->pai=pai;
 }
 
 Nodo* criaArvore(char * entrada){
@@ -164,25 +162,33 @@ Nodo* criaArvore(char * entrada){
 }
 
 void desalocaArvore(Nodo* raiz){
-  if (raiz == NULL) return;
+  int p, vn, v;
   if(raiz->quantosFilhos > 0){
-    raiz->quantosFilhos-=1;
-    printf("indo para %c em -> %p\n", raiz->filhos[raiz->quantosFilhos]->conteudo, raiz->filhos[raiz->quantosFilhos]);
-    desalocaArvore(raiz->filhos[raiz->quantosFilhos]);
-    printf("saindo recursivamente de %p\n",raiz);
-    if (raiz->pai == NULL) return;
+    for(p = raiz->quantosFilhos; p > 0; p--){
+      for(vn = raiz->filhos[p-1]->quantosFilhos; vn > 0; vn--){
+        for(v = raiz->filhos[p-1]->filhos[vn-1]->quantosFilhos; v > 0; v--){
+          printf("limpando filhos da variavel negada limpando var negada %d, -> %c\n", v, raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->conteudo);
+          if(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->filhos != NULL){
+            free(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]->filhos);
+          }
+          free(raiz->filhos[p-1]->filhos[vn-1]->filhos[v-1]);
+        }
+        if(raiz->filhos[p-1]->filhos[vn-1]->filhos != NULL){
+          printf("limpando vetor de filhos VN e ");
+          free(raiz->filhos[p-1]->filhos[vn-1]->filhos);
+        }
+        printf("limpando var ou negacao %d, -> %c\n", vn, raiz->filhos[p-1]->filhos[vn-1]->conteudo);
+        free(raiz->filhos[p-1]->filhos[vn-1]);
+      }
+    if(raiz->filhos[p-1]->filhos != NULL){
+      printf("limpando vetor de filhos VN e ");
+      free(raiz->filhos[p-1]->filhos);
+    }
+    printf("limpando murtiplicassao %d, -> %c\n", p, raiz->filhos[p-1]->conteudo);
+    free(raiz->filhos[p-1]);
+    }
   }
-  Nodo* anterior = raiz->pai;
-  if(anterior != NULL){
-    printf("%c agora tem %d filhos\n",anterior->conteudo, anterior->quantosFilhos);
-    free(raiz->filhos);
-    free(raiz);
-    desalocaArvore(anterior);
-    printf("saindo recursivamente de %p\n",raiz);
-  }
-  else{
-    puts("cabou-se");
-    //exit(EXIT_SUCCESS);
-    return;
-  }
+  free(raiz->filhos);
+  printf("limpando raiz %d, -> %c\n", p, raiz->conteudo);
+  free(raiz);
 }

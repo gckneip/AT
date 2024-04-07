@@ -4,7 +4,7 @@
 typedef struct node {
   char conteudo;
   int quantosFilhos, capacidade;
-  struct node *pai, **filhos;
+  struct node **filhos;
 } Nodo;
 
 typedef struct nodequeue {
