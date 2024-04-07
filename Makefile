@@ -4,14 +4,20 @@ else
 	ARQUIVO=AT
 endif
 
-$(ARQUIVO): tabela.o transicoes.o main.o
-	gcc main.o tabela.o transicoes.o
+$(ARQUIVO): main.o
+	gcc main.o 
 
-main.o: transicoes.o tabela.o
+main.o: tabela.o transicoes.o eval.o parser.o inputproc.o
 	gcc -c src/main.c
 
-transicoes.o: tabela.o
+transicoes.o: 
 	gcc -c src/transicoes.c
+
+inputproc.o: 
+	gcc -c src/inputproc.c
+
+parser.o: 
+	gcc -c src/parser.c
 
 tabela.o:
 	gcc -c src/tabela.c
