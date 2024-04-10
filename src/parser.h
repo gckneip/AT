@@ -1,16 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
-
-typedef struct node {
-  char conteudo;
-  int quantosFilhos, capacidade;
-  struct node **filhos;
-} Nodo;
-
-typedef struct nodequeue {
-  int tamanho;
-  struct node ** nodos; 
-} Pilha;
+#include "estruturas.h"
 
 Nodo* criaNodo(char conteudo);
 Nodo* criaRaiz();

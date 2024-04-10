@@ -1,3 +1,5 @@
+#include "parser.h"
+#include 
 #include "tabela.h"
 #include "transicoes.h"
 

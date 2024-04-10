@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 #include "parser.h"
+
 #define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario, não quero quebrar o que ja tá bombando
 #define INI_ARESTAS 5
 
@@ -41,7 +41,7 @@ Pilha* criaPilha (){
 
 void pilhaAdiciona(Pilha *pilha, Nodo *nodo){
   if(pilha->tamanho >= MAX_PILHA){
-    fputs("stack overflow!", stderr);
+    fputs("Stack overflow!", stderr);
     exit(EXIT_FAILURE);
   }
   pilha->nodos[pilha->tamanho]=nodo;
@@ -51,7 +51,7 @@ void pilhaAdiciona(Pilha *pilha, Nodo *nodo){
 Nodo* pilhaPop(Pilha *pilha){
   Nodo *ultimoItem = pilha->nodos[pilha->tamanho - 1];
   if(pilha->tamanho <= 0){
-  fputs("stack underflow!\n", stderr);
+  fputs("Stack underflow!\n", stderr);
   exit(EXIT_FAILURE);
   }
   pilha->tamanho--;
