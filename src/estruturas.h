@@ -12,4 +12,9 @@ typedef struct nodequeue {
   struct node ** nodos; 
 } Pilha;
 
+typedef struct list{
+  char conteudo;
+  struct list *proximo;
+} Lista;
+
 #endif
