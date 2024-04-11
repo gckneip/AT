@@ -3,13 +3,13 @@
 
 struct nodo {
     char conteudo;
+    char valor;
     struct nodo* proximo;
 };
 
-typedef struct nodo Nodo;
+typedef struct nodo Lista;
 
-Nodo* processaVariaveis (char * entrada);
-Nodo* criaNodo(char conteudo);
-Nodo* criaLista (void);
-Nodo* criaLista ();
+Lista* processaVariaveis (char * entrada);
+Lista* criaListaNodo(char conteudo);
+Lista* criaListaRaiz();
 #endif

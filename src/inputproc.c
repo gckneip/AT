@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "inputproc.h"
-
+/*
 int main(int argc, char *argv[]){
   if (argc>1){
     Nodo * variaveis = processaVariaveis(argv[1]);
@@ -15,9 +15,10 @@ int main(int argc, char *argv[]){
   }
   return EXIT_SUCCESS;
 }
+*/
 
-Nodo* criaLista (){
-  Nodo* novoNodo = (Nodo*) (malloc(sizeof(Nodo)));
+Lista* criaListaRaiz (){
+  Lista* novoNodo = (Lista*) (malloc(sizeof(Lista)));
   if (novoNodo == NULL){
     fputs("Nao foi possível alocar memoria.", stderr);
     exit(EXIT_FAILURE);
@@ -26,8 +27,8 @@ Nodo* criaLista (){
   return novoNodo;
 }
 
-Nodo* criaNodo (char conteudo){
-  Nodo* novoNodo = (Nodo*) (malloc(sizeof(Nodo)));
+Lista* criaListaNodo (char conteudo){
+  Lista* novoNodo = (Lista*) (malloc(sizeof(Lista)));
   if (novoNodo == NULL){
     fputs("Nao foi possível alocar memoria.", stderr);
     exit(EXIT_FAILURE);
@@ -37,18 +38,16 @@ Nodo* criaNodo (char conteudo){
   return novoNodo;
 }
 
-Nodo* processaVariaveis (char * entrada){
+Lista* processaVariaveis (char * entrada){
   int variaveis = 0, i;
   char c;
-  Nodo* saida = criaLista();
-  Nodo *nodoAnterior, *novoNodo;
-  printf("%s\n", entrada);
+  Lista* saida = criaListaRaiz();
+  Lista *nodoAnterior, *novoNodo;
   for (i = 0; ((c = entrada[i]) != '\0'); i++){
-    printf("parsing -> %c\n", entrada[i]);
     if (c >='a' && c <= 'z'){
       for(nodoAnterior = saida; ((nodoAnterior->proximo != NULL) && (nodoAnterior->proximo->conteudo < c)); nodoAnterior = nodoAnterior->proximo);
       if((nodoAnterior->proximo != NULL && nodoAnterior->proximo->conteudo != c) || nodoAnterior->proximo == NULL){
-        novoNodo = criaNodo(c);
+        novoNodo = criaListaNodo(c);
         novoNodo->proximo = nodoAnterior->proximo;
         nodoAnterior->proximo = novoNodo;
         variaveis++;

@@ -1,24 +1,31 @@
 ifeq ($(OS), Windows_NT)
-	ARQUIVO=AT.exe
+	ARQUIVO=sexo.exe
 else
-	ARQUIVO=AT
+	ARQUIVO=sexo
 endif
 
-$(ARQUIVO): main.o
-	gcc main.o 
+CC := gcc
+CFLAGS := -Wall -Wextra -std=c11 -Isrc
 
-main.o: tabela.o transicoes.o eval.o parser.o inputproc.o
-	gcc -c src/main.c
+LIBS += -lm
 
-transicoes.o: 
-	gcc -c src/transicoes.c
+$(ARQUIVO): transicoes.o eval.o parser.o main.o inputproc.o
+	$(CC) $^ -o $@ $(LIBS)
 
-inputproc.o: 
-	gcc -c src/inputproc.c
+main.o: src/main.c
+	$(CC) $(CFLAGS) -c $< -lm -o $@
 
-parser.o: 
-	gcc -c src/parser.c
+transicoes.o: src/transicoes.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-tabela.o:
-	gcc -c src/tabela.c
+parser.o: src/parser.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
+eval.o: src/eval.c
+	$(CC) $(CFLAGS) -c $< -lm -o $@
+
+inputproc.o: src/inputproc.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(ARQUIVO) *.o
