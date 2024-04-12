@@ -22,7 +22,7 @@ int processaVariaveis (char * entrada, Lista * saida){
         variaveis++;
       }
     }
-  } 
+  }
   return variaveis;
 }
 
