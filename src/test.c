@@ -2,7 +2,6 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-  //                     abcde
   char arco[4] = {0};
   unsigned char tabelaVerdade[] = {0, 1, 0, 1, 0, 0, 1, 1};
   char operandos[] = {'a', 'b', 'c'};
@@ -21,8 +20,6 @@ int main(int argc, char *argv[]) {
         }
         arco[k]=operandos[i];
       }
-      //printf("%s eh o arco %03b -> %03b\n----------\n",arco , indiceTabela, indiceTabela + (1 << ((quantosOperandos -1) - i)));
-
       if(tabelaVerdade[indiceTabela] != tabelaVerdade[indiceTabela + (1 << ((quantosOperandos - 1) - i))])
         printf("%s\n", arco);
       l = 0;
