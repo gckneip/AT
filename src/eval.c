@@ -2,21 +2,18 @@
 #include "estruturas.h"
 #include <stdlib.h>
 
-
-int valorBitIndice(int indice, int bit) { return ((indice & 1 << bit) >> bit); }
-
 unsigned char *geraTabela(Nodo *arvore, int quantasEntradas, char *entradas) {
-  int tamanhoVetor = 1 << quantasEntradas;
+  unsigned long int tamanhoVetor = 1 << quantasEntradas;
   unsigned char *tabelaVerdade = calloc((tamanhoVetor),sizeof(unsigned char)); // inicia o vetor de resultados com 2^n
 
-  for (int i = 0; i < tamanhoVetor; i++) {
+  for (unsigned int i = 0; i < tamanhoVetor; i++) {
     tabelaVerdade[i] = percorreArvore(arvore, entradas, quantasEntradas, i);
   }
 
   return tabelaVerdade;
 }
 
-unsigned char percorreArvore(Nodo *raiz, char *variaveis, int quantasEntradas, unsigned char entrada) {
+unsigned char percorreArvore(Nodo *raiz, char *variaveis, int quantasEntradas, unsigned long int entrada) {
   int i;
   if (raiz->conteudo == '+') {
     for (i = 0; i < raiz->quantosFilhos; i++) {
@@ -28,14 +25,15 @@ unsigned char percorreArvore(Nodo *raiz, char *variaveis, int quantasEntradas, u
   return 0;
 }
 
-unsigned char procuraZero(Nodo *raiz, char *variaveis, int quantasEntradas, unsigned char entrada) {
+unsigned char procuraZero(Nodo *raiz, char *variaveis, int quantasEntradas, unsigned long int entrada) {
   int i, j;
-
+  unsigned long int bit;
   for (i = 0; i < raiz->quantosFilhos; i++) {
     if (raiz->filhos[i]->conteudo >= 'a' && raiz->filhos[i]->conteudo <= 'z') {
       for (j = 0; j < quantasEntradas; j++) {
         if (variaveis[j] == raiz->filhos[i]->conteudo) {
-          if (valorBitIndice(entrada, quantasEntradas - j - 1) == 0) {
+          bit = quantasEntradas - j - 1;
+          if (((entrada & 1 << bit) >> bit) == 0) {
             return 1;
           }
         }
@@ -44,7 +42,8 @@ unsigned char procuraZero(Nodo *raiz, char *variaveis, int quantasEntradas, unsi
     if (raiz->filhos[i]->conteudo == '!') {
       for (j = 0; j < quantasEntradas; j++) {
         if (variaveis[j] == raiz->filhos[i]->filhos[0]->conteudo) {
-          if (valorBitIndice(entrada, quantasEntradas - j - 1) == 1) {
+          bit = quantasEntradas - j - 1;
+          if (((entrada & 1 << bit) >> bit) == 1) {
             return 1;
           }
         }

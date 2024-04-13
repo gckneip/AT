@@ -5,9 +5,14 @@
 void imprimeArcos (unsigned char * tabelaVerdade, char * operandos, int quantosOperandos){
 
   int peso, i, j, k, l = 0;
-  int indiceTabela = 0;
+  long unsigned int indiceTabela = 0;
   
   char *arco = calloc(sizeof(char), quantosOperandos+1);
+  
+  if (arco == NULL){
+    puts("Nao foi possivel alocar memoria para a tabela verdade");
+    exit(EXIT_FAILURE);
+  }
 
   for (i = 0; i < quantosOperandos; i++) {
     for (j = 0; j < (1 << (quantosOperandos - 1)); j++) {
@@ -21,8 +26,9 @@ void imprimeArcos (unsigned char * tabelaVerdade, char * operandos, int quantosO
         }
         arco[k]=operandos[i];
       }
-      if(tabelaVerdade[indiceTabela] != tabelaVerdade[indiceTabela + (1 << ((quantosOperandos - 1) - i))])
+      if(tabelaVerdade[indiceTabela] != tabelaVerdade[indiceTabela + (1 << ((quantosOperandos - 1) - i))]){
         printf("%s\n", arco);
+      }
       l = 0;
       indiceTabela = 0;
     }
