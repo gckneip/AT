@@ -10,7 +10,7 @@ void imprimeArcos (unsigned char * tabelaVerdade, char * operandos, int quantosO
   char *arco = calloc(sizeof(char), quantosOperandos+1);
   
   if (arco == NULL){
-    puts("Nao foi possivel alocar memoria para a tabela verdade");
+    fputs("Nao foi possivel alocar memoria para a tabela verdade", stderr);
     exit(EXIT_FAILURE);
   }
 
