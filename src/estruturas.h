@@ -9,6 +9,7 @@ typedef struct node {
 
 typedef struct nodequeue {
   int tamanho;
+  int capacidade;
   struct node ** nodos; 
 } Pilha;
 

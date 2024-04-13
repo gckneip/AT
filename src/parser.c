@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "parser.h"
 
-#define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario, não quero quebrar o que ja tá bombando
+#define INI_PILHA 30 // pilha agora é alocada dinamicamente, o limite de operacoes nao é mais 30
 #define INI_ARESTAS 5
 
 Nodo* criaNodo (char conteudo){
@@ -34,16 +34,22 @@ Nodo* criaRaiz (){
 Pilha* criaPilha (){
   Pilha* novaPilha = (Pilha*) (malloc(sizeof(Pilha)));
   novaPilha->tamanho=0;
-  novaPilha->nodos=malloc(sizeof(* novaPilha)*MAX_PILHA);
+  novaPilha->nodos=malloc(sizeof(* novaPilha)*INI_PILHA);
+  novaPilha->capacidade=INI_PILHA;
 
   return novaPilha;
 }
 
-void pilhaAdiciona(Pilha *pilha, Nodo *nodo){
-  if(pilha->tamanho >= MAX_PILHA){
-    fputs("Stack overflow!", stderr);
-    exit(EXIT_FAILURE);
+void pilhaPush(Pilha *pilha, Nodo *nodo){
+  Nodo **novoPonteiro = pilha->nodos;
+  if(pilha->tamanho >= pilha->capacidade){
+    pilha->capacidade *= 2;
+    if((novoPonteiro = (Nodo**) realloc(pilha->nodos, (sizeof(Nodo *)) * (pilha->capacidade))) == NULL){
+      fputs("Erro ao realocar pilha para novo tamanho.", stderr);
+      exit(EXIT_FAILURE);
+    }
   }
+  pilha->nodos = novoPonteiro;
   pilha->nodos[pilha->tamanho]=nodo;
   pilha->tamanho++;
 }
@@ -51,8 +57,8 @@ void pilhaAdiciona(Pilha *pilha, Nodo *nodo){
 Nodo* pilhaPop(Pilha *pilha){
   Nodo *ultimoItem = pilha->nodos[pilha->tamanho - 1];
   if(pilha->tamanho <= 0){
-  fputs("Stack underflow!\n", stderr);
-  exit(EXIT_FAILURE);
+    fputs("Stack underflow! \n(nao ha hipotese plausivel para esse erro acontecer, tome nota da entrada utilizada e contate um mainteiner urgentemente)\n", stderr);
+    exit(EXIT_FAILURE);
   }
   pilha->tamanho--;
   return ultimoItem;
@@ -85,17 +91,17 @@ Nodo* criaArvore(char * entrada){
         continue;
       }
       novoNodo = criaNodo(c);
-      pilhaAdiciona(operadores, novoNodo);
+      pilhaPush(operadores, novoNodo);
     }
 
     if (c >='a' && c <= 'z'){
       novoNodo = criaNodo(c);
       if (operadores->tamanho > 0 && operadores->nodos[operadores->tamanho-1]->conteudo == '!'){
         adicionaFilho(operadores->nodos[operadores->tamanho-1], novoNodo);
-        pilhaAdiciona(operandos, pilhaPop(operadores));
+        pilhaPush(operandos, pilhaPop(operadores));
         continue;
       }
-      pilhaAdiciona(operandos, novoNodo);
+      pilhaPush(operandos, novoNodo);
     }
 
     if (c == '*'){
@@ -107,7 +113,7 @@ Nodo* criaArvore(char * entrada){
       while(operandos->tamanho){
         adicionaFilho(novoNodo, pilhaPop(operandos));
       }
-      pilhaAdiciona(processados, novoNodo);
+      pilhaPush(processados, novoNodo);
     }
   }
   if (operandos->tamanho){
@@ -115,7 +121,7 @@ Nodo* criaArvore(char * entrada){
    while(operandos->tamanho){
     adicionaFilho(novoNodo, pilhaPop(operandos));
   }
-  pilhaAdiciona(processados, novoNodo);
+  pilhaPush(processados, novoNodo);
 
   }
 
