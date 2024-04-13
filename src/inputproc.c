@@ -2,22 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char *argv[]) {
-  if (argc > 1) {
-
-    char *vetorVariaveis = (char*) malloc(sizeof(char));
-    int quantasVariaveis = processaVariaveis(argv[1], vetorVariaveis);
-    
-    printf("chegou aqui e travou? anyway sao %d variaveis\n", quantasVariaveis);
-
-    for (int i = 0; i < quantasVariaveis; i++) {
-      printf("%d -> %c\n",i, vetorVariaveis[i]);
-    }
-  }
-
-  return EXIT_SUCCESS;
-}
-
 Lista *criaItem(char caractere) {
   Lista *saida = (Lista *)malloc(sizeof(Lista));
   saida->conteudo = caractere;
@@ -25,7 +9,8 @@ Lista *criaItem(char caractere) {
   return saida;
 }
 
-int processaVariaveis(char *entrada, char *saida) {
+int processaVariaveis(char *entrada, char ** saidaLista) {
+  char *saida;
   Lista *lista = criaItem('\0');
   int variaveis = 0, i;
   char c;
@@ -46,13 +31,14 @@ int processaVariaveis(char *entrada, char *saida) {
     }
   }
 
-  saida = (char*) realloc(saida, sizeof(char)*variaveis);
+  saida= (char*) malloc(variaveis * sizeof(char));
   i = 0;
   for (itemAnterior = lista; itemAnterior->proximo != NULL;itemAnterior = itemAnterior->proximo) {
     saida[i] = itemAnterior->proximo->conteudo;
     i++;
   }
   desalocaLista(lista);
+  *saidaLista = saida;
   return variaveis;
 }
 

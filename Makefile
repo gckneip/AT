@@ -4,21 +4,26 @@ else
 	ARQUIVO=AT
 endif
 
-$(ARQUIVO): main.o
-	gcc main.o 
+CC := gcc
+CFLAGS := -Wall -Wextra -std=c11 -Isrc
 
-main.o: tabela.o transicoes.o eval.o parser.o inputproc.o
-	gcc -c src/main.c
+$(ARQUIVO): transicoes.o eval.o parser.o main.o inputproc.o
+	$(CC) $^ -o $@ $(LIBS)
 
-transicoes.o: 
-	gcc -c src/transicoes.c
+main.o: src/main.c
+	$(CC) $(CFLAGS) -c $<  -o $@
 
-inputproc.o: 
-	gcc -c src/inputproc.c
+transicoes.o: src/transicoes.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-parser.o: 
-	gcc -c src/parser.c
+parser.o: src/parser.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-tabela.o:
-	gcc -c src/tabela.c
+eval.o:  src/eval.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
+inputproc.o: src/inputproc.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(ARQUIVO) *.o

@@ -5,16 +5,6 @@
 #define MAX_PILHA 30 // achei solucao pra alocar a pilha dinamicamente, me avisem se for necessario, não quero quebrar o que ja tá bombando
 #define INI_ARESTAS 5
 
-int main(int argc, char *argv[])
-{
-  if(argc>1){
-    Nodo * arvore = criaArvore(argv[1]);
-    desalocaArvore(arvore);
-  }
-
-  return EXIT_SUCCESS;
-}
-
 Nodo* criaNodo (char conteudo){
   Nodo *novoNodo = (Nodo*) (malloc(sizeof(Nodo)));
   if (novoNodo == NULL){
