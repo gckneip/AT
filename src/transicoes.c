@@ -7,7 +7,7 @@ void imprimeArcos (unsigned char * tabelaVerdade, char * operandos, int quantosO
   int peso, i, j, k, l = 0;
   int indiceTabela = 0;
   
-  char *arco = calloc(sizeof(char), quantosOperandos);
+  char *arco = calloc(sizeof(char), quantosOperandos+1);
 
   for (i = 0; i < quantosOperandos; i++) {
     for (j = 0; j < (1 << (quantosOperandos - 1)); j++) {

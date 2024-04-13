@@ -17,8 +17,7 @@ unsigned char *geraTabela(Nodo *arvore, int quantasEntradas, char *entradas) {
 }
 
 unsigned char percorreArvore(Nodo *raiz, char *variaveis, int quantasEntradas, unsigned char entrada) {
-  int i, j;
-  char c;
+  int i;
   if (raiz->conteudo == '+') {
     for (i = 0; i < raiz->quantosFilhos; i++) {
       if (procuraZero(raiz->filhos[i], variaveis, quantasEntradas, entrada))
