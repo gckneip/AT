@@ -4,6 +4,12 @@
 
 Lista *criaItem(char caractere) {
   Lista *saida = (Lista *)malloc(sizeof(Lista));
+
+  if(saida == NULL){
+    fputs("Nao foi possivel alocar memoria para a um dos itens da lista de operandos", stderr);
+    exit(EXIT_FAILURE);
+  }
+
   saida->conteudo = caractere;
   saida->proximo = NULL;
   return saida;
@@ -32,6 +38,10 @@ int processaVariaveis(char *entrada, char ** saidaLista) {
   }
 
   saida= (char*) malloc(variaveis * sizeof(char));
+  if(saida == NULL){
+    fputs("Nao foi possivel alocar memoria para a tabela verdade", stderr);
+    exit(EXIT_FAILURE);
+  }
   i = 0;
   for (itemAnterior = lista; itemAnterior->proximo != NULL;itemAnterior = itemAnterior->proximo) {
     saida[i] = itemAnterior->proximo->conteudo;
