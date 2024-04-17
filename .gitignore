@@ -45,6 +45,18 @@
 # Kernel Module Compile Results
 *.mod*
 *.cmd
+debug
+debug.exe
+parser
+parser.exe
+eval
+eval.exe
+main
+main.exe
+transicoes
+transicoes.exe
+AT
+AT.exe
 .tmp_versions/
 modules.order
 Module.symvers
