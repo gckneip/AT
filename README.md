@@ -6,7 +6,7 @@ Calculadora de arcos de transição desenvolvida em C.
 
 ### No Linux
 é necessário ter o `git` e o `gcc` instalados
-1) faça `clone` repositório
+1) faça `clone` do repositório
 ```
 $ git clone https://github.com/gckneip/AT.git
 ```
@@ -23,7 +23,7 @@ $ ./AT 'a*b+!a*c'
 
 ### No Windows
 é necessário ter o `git` e o `minGW` instalados e configurados na variavel `PATH` do sistema
-1) faça `clone` repositório
+1) faça `clone` do repositório
 ```
 $ git clone https://github.com/gckneip/AT.git
 ```
